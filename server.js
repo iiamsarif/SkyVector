@@ -29,7 +29,9 @@ app.get("/convert",(req,res)=>{
 app.get("/encrypt",(req,res)=>{
     res.sendFile(__dirname+"/encrypt.html");
 })
-
+app.get("/privacy",(req,res)=>{
+    res.sendFile(__dirname+"/privacy.html");
+})
 
 // Handle file upload
 app.post("/upload", upload.single("image"), (req, res) => {
