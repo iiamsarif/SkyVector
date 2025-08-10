@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Base64 → Image Converter</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      font-weight: 200;
+      margin: 0;
+      background: linear-gradient(135deg, #020817 0%, #041f3d 50%, #0a3c5f 100%);
+      color: #e0e8ff;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px 40px;
+      color: #61dafb;
+      border-bottom: 1px solid rgba(97, 218, 251, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .navbar img {
+      height: 50px;
+      border-radius: 8px;
+      border: 1px solid rgba(97, 218, 251, 0.4);
+    }
+
+    .navbar a {
+      color: #61dafb;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 200;
+      transition: color 0.2s;
+    }
+
+    .navbar a:hover {
+      color: #1e90ff;
+    }
+
+    /* Page Content */
+    main {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    textarea {
+      width: 90%;
+      height: 200px;
+      background: #1b2b45;
+      color: #fff;
+      border: 1px solid #61dafb;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #1e90ff;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .imgs {
+      margin-top: 20px;
+      max-width: 40%;
+      border: 2px solid #1e90ff;
+      border-radius: 10px;
+    }
+
+    a.download-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #28a745;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    /* Footer */
+    footer.footer {
+      background: #061324;
+      padding: 15px;
+      border-top: 2px solid #1e90ff;
+      margin-top: 30px;
+      color: #61dafb;
+      font-size: 14px;
+    }
+
+    .section {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 600px) {
+      body {
+        font-size: 15px;
+      }
+
+      .navbar {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    #result {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .action-btn {
+      background: linear-gradient(90deg, #0a5fd8, #1e90ff);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+
+    .action-btn:hover {
+      background: linear-gradient(90deg, #1e90ff, #0a5fd8);
+      transform: scale(1.03);
+      box-shadow: 0 0 15px rgba(30, 144, 255, 0.5);
+    }
+
+    .crypto-form {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .crypto-form input {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid rgba(30, 144, 255, 0.4);
+      background: rgba(0, 0, 0, 0.4);
+      color: white;
+    }
+
+    .crypto-form pre {
+      display: none;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+      font-size: 0.9em;
+      color: #9ddcff;
+    }
+
+    /* 📱 Responsive adjustments */
+    @media (max-width: 600px) {
+      .action-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+      }
+
+      .crypto-form {
+        gap: 8px;
+      }
+
+      .crypto-form input {
+        font-size: 14px;
+        padding: 10px;
+      }
+
+      .crypto-form pre {
+        font-size: 0.8em;
+        max-height: 150px;
+      }
+    }
+        /* Copy Button */
+    .copyBtn {
+      position: sticky;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 5px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-top: 5px;
+      float: right;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div><img class="image" src="img/logo.png" alt="Logo"></div>
+    <div>
+      <a href="/">Home</a>
+      <a href="/convert">Convert</a>
+      <a href="/encrypt">Encrypt</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <div class="section">
+      <h2>Encrypt / Decrypt Messages</h2>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <button id="lockBtn" class="action-btn">🔒 Lock Text</button>
+        <button id="unlockBtn" class="action-btn">🔓 Unlock Text</button>
+      </div>
+
+      <!-- Lock Form -->
+      <div id="lockForm" class="crypto-form" style="display: none;">
+        <h3>Lock a Secret Message</h3>
+        <input type="text" id="lockMessage" placeholder="Enter your secret message">
+        <input type="text" id="lockKey" placeholder="Enter key/password">
+        <button onclick="encryptMessage()">Encrypt</button>
+        <pre id="lockOutput"></pre>
+        <button id="copyBtn" class="copyBtn">Copy</button>
+      </div>
+
+      <!-- Unlock Form -->
+      <div id="unlockForm" class="crypto-form" style="display: none;">
+        <h3>Unlock a Secret Message</h3>
+        <input type="text" id="unlockMessage" placeholder="Paste encrypted text">
+        <input type="text" id="unlockKey" placeholder="Enter key/password">
+        <button onclick="decryptMessage()">Decrypt</button>
+        <pre id="unlockOutput"></pre>
+        <button id="copyBtn1" class="copyBtn">Copy</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h1>Why Encrypt Your Text?</h1>
+      <p>Text encryption ensures that your messages remain private, secure, and readable only by those who have the
+        correct key or password. This protects sensitive information from hackers, data breaches, or unwanted access.
+      </p>
+      <img class="imgs"
+        src="https://www.officesolutionsit.com.au/hs-fs/hubfs/hi-tech-shield-cyber-security-digital-data-network-protection-min.jpg?width=1140&height=500&name=hi-tech-shield-cyber-security-digital-data-network-protection-min.jpg"
+        alt="Text Encryption Security">
+    </div>
+
+    <div class="section">
+      <h1>Privacy Without Accounts</h1>
+      <p>No sign-ups, no tracking, no storage. You simply choose a password, encrypt your text, and share it with
+        trusted recipients. Only those with your key can decrypt and read the original message.</p>
+      <img class="imgs"
+        src="https://assets.channelinsider.com/uploads/2024/04/ci_20240415-network-security-service-providers.png"
+        alt="Private and Secure Messaging">
+    </div>
+
+  </main>
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+
+  <script>
+    const lockBtn = document.getElementById("lockBtn");
+    const unlockBtn = document.getElementById("unlockBtn");
+    const lockForm = document.getElementById("lockForm");
+    const unlockForm = document.getElementById("unlockForm");
+    const copyBtn = document.getElementById('copyBtn');
+        const copyBtn1 = document.getElementById('copyBtn1');
+    lockBtn.onclick = () => {
+      lockForm.style.display = "flex";
+      unlockForm.style.display = "none";
+    };
+
+    unlockBtn.onclick = () => {
+      unlockForm.style.display = "flex";
+      lockForm.style.display = "none";
+    };
+
+    function encryptMessage() {
+      const message = document.getElementById("lockMessage").value;
+      const key = document.getElementById("lockKey").value;
+      if (!message || !key) {
+        alert("Please enter both message and key.");
+        return;
+      }
+      const encrypted = CryptoJS.AES.encrypt(message, key).toString();
+      document.getElementById("lockOutput").style.display = "block"
+      document.getElementById("lockOutput").textContent = encrypted;
+    }
+
+    function decryptMessage() {
+      const encryptedText = document.getElementById("unlockMessage").value;
+      const key = document.getElementById("unlockKey").value;
+      if (!encryptedText || !key) {
+        alert("Please enter both encrypted text and key.");
+        return;
+      }
+      try {
+        const bytes = CryptoJS.AES.decrypt(encryptedText, key);
+        const original = bytes.toString(CryptoJS.enc.Utf8);
+        document.getElementById("unlockOutput").style.display = "block"
+        if (!original) throw new Error("Wrong key or corrupt data");
+        document.getElementById("unlockOutput").textContent = original;
+      } catch (err) {
+        document.getElementById("unlockOutput").textContent = "❌ Decryption failed.";
+      }
+    }
+
+    copyBtn.addEventListener('click', () => {
+       const text = document.getElementById("lockOutput");
+      navigator.clipboard.writeText(text.textContent).then(() => {
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => {
+          copyBtn.textContent = originalText;
+        }, 1500);
+      });
+    });
+      copyBtn1.addEventListener('click', () => {
+        const text = document.getElementById("unlockOutput");
+      navigator.clipboard.writeText(text.textContent).then(() => {
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => {
+          copyBtn.textContent = originalText;
+        }, 1500);
+      });
+    });
+  </script>
+
+</body>
+
+</html>

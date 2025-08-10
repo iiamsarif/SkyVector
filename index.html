@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pro Image Uploader - SciFi Theme</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      font-weight: 200;
+      margin: 0;
+      background: linear-gradient(135deg, #020817 0%, #041f3d 50%, #0a3c5f 100%);
+      color: #e0e8ff;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px 40px;
+      color: #61dafb;
+      border-bottom: 1px solid rgba(97, 218, 251, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .navbar img {
+      height: 50px;
+      border-radius: 8px;
+      border: 1px solid rgba(97, 218, 251, 0.4);
+    }
+
+    .navbar a {
+      color: #61dafb;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 200;
+      transition: color 0.2s;
+    }
+
+    .navbar a:hover {
+      color: #1e90ff;
+    }
+
+    /* Upload Section */
+    .upload-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      margin: 30px auto;
+      width: 90%;
+      max-width: 1000px;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+    }
+
+    .upload-box {
+      flex: 1;
+      min-width: 280px;
+      padding: 20px;
+    }
+
+    .upload-box input[type="file"] {
+      display: block;
+      margin-bottom: 15px;
+      color: #e0e8ff;
+    }
+
+    .upload-box button {
+      background: linear-gradient(90deg, #0a5fd8, #1e90ff);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 200;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+
+    .upload-box button:hover {
+      background: linear-gradient(90deg, #1e90ff, #0a5fd8);
+      transform: scale(1.03);
+      box-shadow: 0 0 15px rgba(30, 144, 255, 0.5);
+    }
+
+    .upload-status {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #9ddcff;
+    }
+
+    .upload-preview {
+      flex: 1;
+      min-width: 280px;
+      text-align: center;
+    }
+
+    .upload-preview img {
+      width: 100%;
+      max-width: 350px;
+      border-radius: 10px;
+      border: 2px solid #1e90ff;
+      box-shadow: 0 0 25px rgba(30, 144, 255, 0.4);
+    }
+
+    /* Base64 Output Box */
+    #base64Output {
+      display: none;
+      height: 200px;
+      overflow-y: scroll;
+      margin: 20px auto;
+      font-size: 12px;
+      word-break: break-all;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 10px;
+      border-radius: 5px;
+      width: 90%;
+      max-width: 1000px;
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+
+    /* Copy Button */
+    #copyBtn {
+      position: sticky;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 5px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-top: 5px;
+      float: right;
+    }
+
+    /* Sections */
+    .section {
+      width: 90%;
+      max-width: 1000px;
+      margin: auto;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .section h2 {
+      color: #61dafb;
+      font-weight: 200;
+    }
+
+    .faq-item strong {
+      color: #1e90ff;
+    }
+
+    .review {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 10px 0;
+    }
+
+    .review:last-child {
+      border-bottom: none;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #61dafb;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      margin-top: 30px;
+      border-top: 1px solid rgba(97, 218, 251, 0.2);
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 600px) {
+        body{
+            font-size: 15px;
+        }
+      .navbar {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .upload-section {
+        flex-direction: column;
+      }
+    }
+
+.tools-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0);
+}
+
+.tool-card {
+  flex: 1 1;
+  max-width: 250px;
+  background: rgba(30, 144, 255, 0.05);
+  border: 2px solid rgba(30, 144, 255, 0.4);
+  border-radius: 12px;
+  text-align: center;
+  padding: 20px;
+  text-decoration: none;
+  color: white;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.tool-card img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.tool-card h3 {
+  font-size: 1.2em;
+  margin: 0;
+}
+
+.tool-card:hover {
+  transform: scale(1.05);
+  background: rgba(30, 144, 255, 0.15);
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .tools-section {
+    flex-direction: column;
+    align-items: center;
+  }
+  .tool-card {
+    width: auto;            /* don't stretch full width */
+    max-width: 180px;       /* keep small */
+    padding: 12px;
+  }
+  .tool-card img {
+    width: 60px;
+    height: 60px;
+  }
+  .tool-card h3 {
+    font-size: 1em;
+  }
+}
+
+
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div><img src="img/logo.png" alt="Logo"></div>
+    <div>
+       <a href="/">Home</a>
+      <a href="/convert">Convert</a>
+      <a href="/encrypt">Encrypt</a>
+    </div>
+  </nav>
+
+  <!-- Upload Section -->
+  <section class="upload-section">
+    <div class="upload-box">
+      <h2>Upload Your Image</h2>
+      <input type="file" id="fileInput" accept="image/*">
+      <button onclick="uploadImage()">Upload</button>
+      <div class="upload-status" id="uploadStatus"></div>
+    </div>
+    <div class="upload-preview">
+      <img id="previewImage"
+        src="img/SkyVector Cybersecurity Concept Design.png"
+        alt="Preview">
+    </div>
+  </section>
+
+  <div id="base64Output">
+    <div id="base64Text">Base64 output will appear here...</div>
+    <button id="copyBtn">Copy</button>
+  </div>
+<div class="tools-section">
+  <a href="/convert" class="tool-card">
+    
+    <h3>Base64 → Image</h3>
+  </a>
+  <a href="/encrypt" class="tool-card">
+    <h3>Encrypt Text</h3>
+  </a>
+</div>
+  <!-- Description -->
+  <div class="section">
+    <h2>About This Tool</h2>
+    <p>This professional-grade image uploader is designed for speed, security, and simplicity. Whether you are a
+      photographer, designer, or casual user, this platform ensures a smooth upload experience with minimal effort.</p>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+      <strong>Q: Is my data secure?</strong>
+      <p>A: Yes, uploads are handled securely and not stored permanently.</p>
+    </div>
+    <div class="faq-item">
+      <strong>Q: Can I upload multiple images?</strong>
+      <p>A: Currently, one at a time for optimal performance.</p>
+    </div>
+  </div>
+
+  <!-- Reviews -->
+  <div class="section">
+    <h2>User Reviews</h2>
+    <div class="review">⭐⭐⭐⭐⭐ "Super easy to use!" – John D.</div>
+    <div class="review">⭐⭐⭐⭐ "Clean design." – Maria K.</div>
+  </div>
+
+
+
+<script>
+  const fileInput = document.getElementById('fileInput');
+  const uploadStatus = document.getElementById('uploadStatus');
+  const previewImage = document.getElementById('previewImage');
+  const base64Output = document.getElementById('base64Output');
+  const base64Text = document.getElementById('base64Text');
+  const copyBtn = document.getElementById('copyBtn');
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (file) {
+      previewImage.src = URL.createObjectURL(file);
+    }
+  });
+
+  function uploadImage() {
+    const file = fileInput.files[0];
+    if (!file) {
+      uploadStatus.textContent = "⚠ Please select an image first.";
+      return;
+    }
+
+    uploadStatus.textContent = "⏳ Converting to Base64...";
+
+    // Step 1: Convert to Base64
+    toBase64(file)
+      .then(base64Data => {
+        // Step 2: Show Base64 in UI
+        base64Output.style.display = "block";
+        base64Text.textContent = base64Data;
+        uploadStatus.textContent = "✅ Converted! Uploading...";
+
+        // Step 3: Fake upload with fetch (replace URL with real endpoint if needed)
+        return fetch("https://example.com/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: base64Data })
+        });
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Upload failed");
+        return response.json(); // Simulated server response
+      })
+      .then(data => {
+        uploadStatus.textContent = "✅ Upload successful!";
+        console.log("Server response:", data);
+      })
+      .catch(err => {
+        uploadStatus.textContent = "❌ Error: " + err.message;
+        console.error(err);
+      });
+  }
+
+  function toBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(base64Text.textContent).then(() => {
+      const originalText = copyBtn.textContent;
+      copyBtn.textContent = "Copied!";
+      setTimeout(() => {
+        copyBtn.textContent = originalText;
+      }, 1500);
+    });
+  });
+</script>
+
+</body>
+</html>

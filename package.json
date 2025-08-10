@@ -1,0 +1,26 @@
+{
+  "name": "skyvector-tools",
+  "version": "1.0.0",
+  "description": "SkyVector Tools - Base64 to Image Converter and Steganography",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "express",
+    "multer",
+    "base64",
+    "image",
+    "steganography"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

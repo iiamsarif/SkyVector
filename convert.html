@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Base64 → Image Converter</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      font-weight: 200;
+      margin: 0;
+      background: linear-gradient(135deg, #020817 0%, #041f3d 50%, #0a3c5f 100%);
+      color: #e0e8ff;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px 40px;
+      color: #61dafb;
+      border-bottom: 1px solid rgba(97, 218, 251, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .navbar img {
+      height: 50px;
+      border-radius: 8px;
+      border: 1px solid rgba(97, 218, 251, 0.4);
+    }
+
+    .navbar a {
+      color: #61dafb;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 200;
+      transition: color 0.2s;
+    }
+
+    .navbar a:hover {
+      color: #1e90ff;
+    }
+
+    /* Page Content */
+    main {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    textarea {
+      width: 90%;
+      height: 200px;
+      background: #1b2b45;
+      color: #fff;
+      border: 1px solid #61dafb;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #1e90ff;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .imgs {
+      margin-top: 20px;
+      max-width: 60%;
+      border: 2px solid #1e90ff;
+      border-radius: 10px;
+    }
+    a.download-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #28a745;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    /* Footer */
+    footer.footer {
+      background: #061324;
+      padding: 15px;
+      border-top: 2px solid #1e90ff;
+      margin-top: 30px;
+      color: #61dafb;
+      font-size: 14px;
+    }
+
+    .section {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+        /* Responsive */
+    @media screen and (max-width: 600px) {
+        body{
+            font-size: 15px;
+        }
+      .navbar {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+    #result{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div><img class="image" src="img/logo.png" alt="Logo"></div>
+    <div>
+       <a href="/">Home</a>
+      <a href="/convert">Convert</a>
+      <a href="/encrypt">Encrypt</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <h1>Convert Base64 to Image</h1>
+    <textarea id="base64Input" placeholder="Paste your Base64 code here..."></textarea><br>
+    <button onclick="sendBase64()">Convert</button>
+
+    <div id="result"></div>
+
+    <!-- Extra Sections -->
+    <div class="section">
+      <h1>What is Base64?</h1>
+      <p>Base64 is a way of encoding binary data like images into plain text so it can be easily stored or transmitted.</p>
+      <img class="imgs" src="https://media.istockphoto.com/id/629285904/photo/programming-code-abstract-technology-background-of-software-deve.jpg?s=612x612&w=0&k=20&c=YskpkpUYyGqsz8OMtMdGZaZUr3hlAIvtTcaHpTbGL4g=" alt="Base64 Example">
+    </div>
+
+    <div class="section">
+      <h1>Why Convert Base64 to Images?</h1>
+      <p>Converting Base64 to images helps in restoring original files for viewing, editing, or downloading.</p>
+      <img class="imgs" src="https://media.istockphoto.com/id/1340047332/vector/stem-education-of-kids-through-internet-on-laptop-children-study-engineering-professions.jpg?s=170667a&w=0&k=20&c=cXTy7auns0ik2KsPRD4M6uB8GvVf25s3TO5PhywbfaY=" alt="Image Conversion">
+    </div>
+
+
+
+    <div class="section">
+      <h1>Security & Privacy</h1>
+      <p>We do not store your files. All conversions happen on your device.</p>
+      <img class="imgs" src="https://media.istockphoto.com/id/1412282189/photo/lock-network-technology-concept.jpg?s=612x612&w=0&k=20&c=hripuxLs9pS_7Ln6YWQR-Ow2_-BU5RdQ4vOY8s1q1iQ=" alt="Secure Conversion">
+    </div>
+  </main>
+
+ 
+
+  <script>
+    async function sendBase64() {
+      const base64 = document.getElementById("base64Input").value.trim();
+      if (!base64) {
+        alert("Please paste Base64 data.");
+        return;
+      }
+
+      const res = await fetch("/convert", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ base64 })
+      });
+
+      const data = await res.json();
+      if (data.imageUrl) {
+        document.getElementById("result").innerHTML = `
+          <img class="imgs" src="${data.imageUrl}" alt="Converted Image">
+          <br>
+          <a class="download-btn" href="${data.imageUrl}" download="converted.png">Download Image</a>
+        `;
+      } else {
+        alert("Conversion failed.");
+      }
+    }
+  </script>
+
+</body>
+</html>
