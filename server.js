@@ -58,7 +58,7 @@ app.post("/convert", (req, res) => {
     fs.writeFileSync(imgPath, Buffer.from(base64, "base64"));
 
     // Send back image URL
-    res.json({ imageUrl: `http://localhost:3000/${path.basename(imgPath)}` });
+    res.json({ imageUrl: `https://skyvector.onrender.com/${path.basename(imgPath)}` });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Conversion failed." });
@@ -67,3 +67,4 @@ app.post("/convert", (req, res) => {
 
 
 app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
+
